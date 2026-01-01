@@ -126,51 +126,6 @@ public:
 };
 
 
-
-
-/////////////////////////////////////////////
-// Approach-5 -- DP approach.
-class Solution {
-public:
-    int tallestBillboard(vector<int>& rods) {
-        int sum = 0;
-        for (int r : rods) sum += r;
-
-        // dp[d] = max height of the shorter side for difference d.
-        // Initialize with -1 to indicate a difference is currently unreachable.
-        vector<int> dp(sum + 1, -1);
-        dp[0] = 0;
-
-        for (int x : rods) {
-            // Create a copy of the current state to prevent using 
-            // the same rod multiple times for the same transition.
-            vector<int> curr = dp;
-
-            for (int d = 0; d <= sum; ++d) {
-                // If this difference was never reached, skip it.
-                if (curr[d] == -1) continue;
-
-                // Option 1: Put rod x on the taller side
-                // New difference grows, shorter side height stays the same.
-                if (d + x <= sum) {
-                    dp[d + x] = max(dp[d + x], curr[d]);
-                }
-
-                // Option 2: Put rod x on the shorter side
-                // The new difference is the absolute gap after adding x.
-                // The shorter side grows by whichever was smaller: the old gap or the rod.
-                int new_diff = abs(d - x);
-                int new_shorter_h = curr[d] + min(d, x);
-                dp[new_diff] = max(dp[new_diff], new_shorter_h);
-            }
-        }
-
-        return dp[0];
-    }
-};
-
-
-
 /////////////////////////////////////////////////////
 // Final Approach -- Modified C++ Knapsack Code
 #include <vector>
